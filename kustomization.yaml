@@ -6,5 +6,6 @@ resources:
   - ollama
   - open-webui
   - n8n
+  - prometheus
 
 namespace: llm
