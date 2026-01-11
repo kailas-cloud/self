@@ -26,5 +26,5 @@ jobs:
 
       - name: Apply manifests to cluster
         run: |
-          kubectl apply -k k8s
+          kubectl apply -k .
           kubectl rollout status statefulset/ollama -n llm
