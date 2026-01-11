@@ -18,11 +18,26 @@ jobs:
         with:
           kustomize-version: "5.4.2"
 
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: '3.14.0'
+
       - name: Write kubeconfig
         run: |
           echo "${{ secrets.K8S_CONFIG_B64 }}" | base64 --decode > kubeconfig
           chmod 600 kubeconfig
           echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
+
+      - name: Deploy kube-prometheus-stack
+        run: |
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+          helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
+            --namespace monitoring \
+            --create-namespace \
+            --values monitoring/values.yaml \
+            --wait
 
       - name: Apply manifests to cluster
         run: |

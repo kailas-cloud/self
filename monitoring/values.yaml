@@ -1,0 +1,61 @@
+# kube-prometheus-stack values
+# Full options: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 20Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        memory: 4Gi
+
+grafana:
+  enabled: true
+  admin:
+    existingSecret: grafana-admin-secret
+    userKey: admin-user
+    passwordKey: admin-password
+  persistence:
+    enabled: true
+    size: 5Gi
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-http"
+    hosts:
+      - grafana.kailas.cloud
+    tls:
+      - secretName: grafana-kailas-cloud-tls
+        hosts:
+          - grafana.kailas.cloud
+
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+
+# Enable collection of kube-state-metrics
+kubeStateMetrics:
+  enabled: true
+
+# Enable node-exporter for node metrics
+nodeExporter:
+  enabled: true
+
+# Monitor all namespaces
+namespaceOverride: ""
