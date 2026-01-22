@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claude-router
+  namespace: llm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claude-router
+  template:
+    metadata:
+      labels:
+        app: claude-router
+    spec:
+      containers:
+        - name: claude-router
+          image: musistudio/claude-router:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+      volumes:
+        - name: config
+          configMap:
+            name: claude-router-config

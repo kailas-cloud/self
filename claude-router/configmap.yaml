@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: claude-router-config
+  namespace: llm
+data:
+  config.yaml: |
+    server:
+      host: 0.0.0.0
+      port: 8080
+
+    providers:
+      ollama:
+        type: openai
+        base_url: http://ollama.llm.svc.cluster.local/v1
+        api_key: dummy
+
+    routes:
+      - match:
+          model: claude-3-opus*
+        provider: ollama
+        target_model: deepseek-r1:32b
+
+      - match:
+          model: claude-3-sonnet*
+        provider: ollama
+        target_model: qwen3-coder:30b
+
+      - match:
+          model: claude-3-haiku*
+        provider: ollama
+        target_model: devstral-small-2:24b
+
+      - match:
+          model: claude-3-5-sonnet*
+        provider: ollama
+        target_model: qwen3-coder:30b
+
+      - match:
+          model: claude-3-5-haiku*
+        provider: ollama
+        target_model: devstral-small-2:24b
+
+      - match:
+          model: claude-2*
+        provider: ollama
+        target_model: gpt-oss:20b
