@@ -7,7 +7,8 @@ spec:
   selector:
     app: ollama
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 11434
   type: ClusterIP
