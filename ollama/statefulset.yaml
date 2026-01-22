@@ -27,15 +27,30 @@ spec:
           ports:
             - containerPort: 11434
               name: http
+          readinessProbe:
+            httpGet:
+              path: /api/tags
+              port: 11434
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /api/tags
+              port: 11434
+            initialDelaySeconds: 25
+            periodSeconds: 10
+            failureThreshold: 6
           volumeMounts:
             - name: ollama-storage
               mountPath: /root/.ollama
           resources:
             requests:
-              memory: "16Gi"
+              memory: "24Gi"
               cpu: "4"
             limits:
-              memory: "32Gi"
+              memory: "28Gi"
+              cpu: "8"
   volumeClaimTemplates:
     - metadata:
         name: ollama-storage
