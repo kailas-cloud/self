@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
+  - claude-router
   - ollama
   - open-webui
   - n8n
