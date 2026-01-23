@@ -1,4 +1,6 @@
 {
+  "APIKEY": "${APIKEY}",
+  "PORT": 3456,
   "LOG": true,
   "API_TIMEOUT_MS": 600000,
   "NON_INTERACTIVE_MODE": false,

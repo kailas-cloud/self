@@ -29,7 +29,7 @@ spec:
               value: "3456"
           volumeMounts:
             - name: config
-              mountPath: /root/.claude-code-router/config.json
+              mountPath: /root/.claude-code-router/config.json.template
               subPath: config.json
           resources:
             requests:
