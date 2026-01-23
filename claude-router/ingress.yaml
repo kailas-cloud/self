@@ -4,15 +4,10 @@ metadata:
   name: claude-router
   namespace: llm
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-dns
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
+    kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-http"
 spec:
   ingressClassName: traefik
-  tls:
-    - hosts:
-        - cr.kailas.cloud
-      secretName: claude-router-tls
   rules:
     - host: cr.kailas.cloud
       http:
@@ -24,3 +19,7 @@ spec:
                 name: claude-router
                 port:
                   number: 80
+  tls:
+    - hosts:
+        - cr.kailas.cloud
+      secretName: cr-kailas-cloud-tls
