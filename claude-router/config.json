@@ -1,6 +1,6 @@
 {
   "APIKEY": "${APIKEY}",
-  "HOST": "127.0.0.1",
+  "HOST": "0.0.0.0",
   "PORT": 3456,
   "LOG": true,
   "API_TIMEOUT_MS": 600000,
