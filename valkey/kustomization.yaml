@@ -3,9 +3,4 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - ollama
-  - open-webui
-  - n8n
-  - claude-router
-
-namespace: llm
+  - valkey-cluster.yaml

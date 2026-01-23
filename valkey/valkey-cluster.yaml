@@ -1,0 +1,48 @@
+apiVersion: kailas.cloud/v1
+kind: Valkey
+metadata:
+  name: valkey-cluster
+  namespace: valkey
+spec:
+  # 3 primary nodes (shards)
+  nodes: 3
+  # No replicas for now (production would use replicas: 1)
+  replicas: 0
+
+  # Custom image with valkey-search module
+  image: ghcr.io/kailas-cloud/valkey-bundle:9.0-coordinator
+
+  # Load valkey-search module with coordinator enabled for cluster mode
+  modules:
+    - path: /usr/lib/valkey/libsearch.so
+      args:
+        - --use-coordinator
+        - --reader-threads
+        - "8"
+        - --writer-threads
+        - "4"
+        - --hnsw-block-size
+        - "10000"
+        - --log-level
+        - notice
+
+  # Persistent storage using Hetzner Cloud Volumes
+  storage:
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: hcloud-volumes
+      resources:
+        requests:
+          storage: 10Gi
+
+  # Security settings
+  anonymousAuth: false
+  volumePermissions: true
+
+  # No TLS for internal cluster (add later if needed)
+  tls: false
+
+  # Monitoring (optional)
+  prometheus: false
+  serviceMonitor: false

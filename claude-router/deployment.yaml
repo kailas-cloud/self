@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claude-router
+  namespace: llm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claude-router
+  template:
+    metadata:
+      labels:
+        app: claude-router
+    spec:
+      containers:
+        - name: claude-router
+          image: ghcr.io/kailas-cloud/claude-router:latest
+          ports:
+            - containerPort: 3456
+              name: http
+          env:
+            - name: APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: claude-router-secret
+                  key: APIKEY
+            - name: PORT
+              value: "3456"
+          volumeMounts:
+            - name: config
+              mountPath: /root/.claude-code-router/config.json
+              subPath: config.json
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3456
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3456
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: claude-router-config
