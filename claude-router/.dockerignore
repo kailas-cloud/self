@@ -1,6 +1,0 @@
-*.yaml
-*.yml
-!Dockerfile
-.git
-.gitignore
-README.md

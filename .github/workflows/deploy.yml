@@ -29,6 +29,31 @@ jobs:
           chmod 600 kubeconfig
           echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
 
+      - name: Apply k3s addon config (traefik)
+        run: |
+          kubectl apply -k infra/k3s/manifests
+
+      - name: Install/upgrade cert-manager
+        run: |
+          helm repo add jetstack https://charts.jetstack.io
+          helm repo update
+          helm upgrade --install cert-manager jetstack/cert-manager \
+            --namespace cert-manager --create-namespace \
+            --version v1.19.1 \
+            --set installCRDs=true \
+            -f platform/cert-manager/values.yaml \
+            --wait
+
+      - name: Install/upgrade cert-manager Hetzner webhook
+        run: |
+          helm repo add vadimkim https://vadimkim.github.io/cert-manager-webhook-hetzner
+          helm repo update
+          helm upgrade --install cert-manager-webhook-hetzner vadimkim/cert-manager-webhook-hetzner \
+            --namespace cert-manager \
+            --version 1.4.0 \
+            -f platform/cert-manager/webhook-hetzner-values.yaml \
+            --wait
+
       - name: Deploy kube-prometheus-stack
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -36,10 +61,14 @@ jobs:
           helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
             --namespace monitoring \
             --create-namespace \
-            --values monitoring/values.yaml \
+            --values platform/monitoring/values.yaml \
             --wait
+
+      - name: Deploy valkey-operator (CRDs + controller)
+        run: |
+          kubectl apply -k shared/valkey/operator/config/default
+          kubectl rollout status deployment/valkey-operator-controller-manager -n valkey-operator-system
 
       - name: Apply manifests to cluster
         run: |
           kubectl apply -k .
-          kubectl rollout status statefulset/ollama -n llm

@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-dns
+spec:
+  acme:
+    email: admin@kailas.cloud
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-dns-key
+    solvers:
+      - dns01:
+          webhook:
+            groupName: kailas.cloud
+            solverName: hetzner
+            config:
+              apiUrl: https://dns.hetzner.com/api/v1
+              secretName: cert-manager-hetzner-token
+              zoneName: kailas.cloud

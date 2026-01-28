@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: shared
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: REPO_URL_SELF
+    targetRevision: main
+    path: shared
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd

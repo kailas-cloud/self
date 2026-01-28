@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kailas-cloud
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: REPO_URL_SELF
+    targetRevision: main
+    path: clusters/kailas-cloud/argocd/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
