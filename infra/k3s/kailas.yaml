@@ -1,0 +1,67 @@
+cluster_name: kailas
+kubeconfig_path: "./.kubeconfig"
+k3s_version: "v1.32.0+k3s1"
+protect_against_deletion: false
+
+networking:
+  ssh:
+    port: 22
+    use_agent: false
+    public_key_path: "~/.ssh/kailas.pub"
+    private_key_path: "~/.ssh/kailas"
+  allowed_networks:
+    ssh: ["0.0.0.0/0"]
+    api: ["0.0.0.0/0"]
+  public_network:
+    ipv4: true
+    ipv6: true
+  private_network:
+    enabled: true
+  cni:
+    enabled: true
+    encryption: false
+    mode: flannel
+
+masters_pool:
+  instance_type: "cpx22"
+  instance_count: 1
+  location: "nbg1"
+
+worker_node_pools:
+  - name: "node"
+    instance_type: "cpx62"
+    location: "nbg1"
+    instance_count: 0
+    autoscaling:
+      enabled: true
+      min_instances: 0
+      max_instances: 4
+  - name: "ollama"
+    instance_type: "cpx62"
+    location: "nbg1"
+    instance_count: 0
+    autoscaling:
+      enabled: true
+      min_instances: 0
+      max_instances: 2
+    labels:
+      - key: workload
+        value: ollama
+    taints:
+      - key: workload
+        value: ollama:NoSchedule
+
+datastore:
+  mode: etcd
+
+addons:
+  ccm_enabled: true
+  csi_driver:
+    enabled: true
+  autoscaler_enabled: true
+  metrics_server:
+    enabled: true
+  traefik:
+    enabled: true
+  servicelb:
+    enabled: true
