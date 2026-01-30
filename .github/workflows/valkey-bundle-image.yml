@@ -64,3 +64,4 @@ jobs:
             SEARCH_MODULE_ARGS=--use-coordinator yes
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
