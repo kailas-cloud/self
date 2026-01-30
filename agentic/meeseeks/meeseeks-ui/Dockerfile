@@ -13,6 +13,7 @@ RUN if command -v apk >/dev/null 2>&1; then \
     fi
 
 RUN chmod 0755 /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 USER 1000
 
