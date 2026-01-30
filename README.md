@@ -9,7 +9,7 @@ Apps live in **separate repositories** (for example, the `llm` app repo).
 - `platform/` - cluster-level services (monitoring, ingress, operators)
 - `platform/cert-manager/` - cert-manager Helm values + issuers (DNS/HTTP)
 - `shared/` - shared service templates (valkey/postgres/redis) used per-namespace
-- `shared/valkey/` includes operator + bundle repos (nested) and CR templates
+- `shared/valkey/` includes operator + bundle repos (nested) and instance manifests
 - `clusters/` - ArgoCD entrypoints for the `kailas-cloud` cluster
 - `docs/adr/` - architecture decisions
 

@@ -16,24 +16,23 @@ kubectl apply -k self/shared/valkey/operator/config/default
 ## Деплой кластера
 
 ```bash
-kubectl apply -k self/shared/valkey/instances/valkey
+kubectl apply -k self/shared/valkey/instance
 ```
 
-## Использование в app-репозитории (per-namespace)
+## Шаблон инстанса
 
-В app-репозитории подключайте base и задавайте namespace через overlay:
+Основной манифест кластера:
+`self/shared/valkey/instance/valkey.yaml`
 
-```yaml
-resources:
-  - https://<self-repo>//shared/valkey/base?ref=<tag-or-commit>
-namespace: llm
-```
+Namespace для shared-инстанса: `valkey`.
+
+Если нужен отдельный инстанс под приложение — скопируйте папку `instance` и поменяйте `namespace`, `metadata.name` и ресурсы.
 
 ## Конфигурация
 
-### Valkey CR (base template)
+### Valkey CR (instance manifest)
 
-`self/shared/valkey/base/valkey.yaml`
+`self/shared/valkey/instance/valkey.yaml`
 
 | Параметр | Значение | Описание |
 |----------|----------|----------|
@@ -158,7 +157,7 @@ spec:
 ```
 
 ```bash
-kubectl apply -k self/shared/valkey/instances/valkey
+kubectl apply -k self/shared/valkey/instance
 ```
 
 Оператор автоматически:
@@ -169,7 +168,7 @@ kubectl apply -k self/shared/valkey/instances/valkey
 ## Удаление
 
 ```bash
-kubectl delete -k self/shared/valkey/instances/valkey
+kubectl delete -k self/shared/valkey/instance
 ```
 
 **Внимание**: PVC не удаляются автоматически! Для полной очистки:
