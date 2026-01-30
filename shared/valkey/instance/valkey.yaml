@@ -25,6 +25,15 @@ spec:
         - --log-level
         - notice
 
+  # Resource requests/limits
+  resources:
+    limits:
+      cpu: 4000m
+      memory: 16Gi
+    requests:
+      cpu: 2000m
+      memory: 12Gi
+
   # Persistent storage using Hetzner Cloud Volumes
   storage:
     spec:
@@ -33,7 +42,7 @@ spec:
       storageClassName: hcloud-volumes
       resources:
         requests:
-          storage: 10Gi
+          storage: 100Gi
 
   # Security settings
   anonymousAuth: false
@@ -42,6 +51,6 @@ spec:
   # No TLS for internal cluster (add later if needed)
   tls: false
 
-  # Monitoring (optional)
-  prometheus: false
-  serviceMonitor: false
+  # Monitoring
+  prometheus: true
+  serviceMonitor: true
