@@ -1,7 +1,10 @@
-name: Go Test
+name: Valkey Operator Test
 
 on:
   pull_request:
+    paths:
+      - "shared/valkey/operator/**"
+      - ".github/workflows/valkey-operator-test.yml"
 
 permissions:
   contents: read
@@ -11,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Go ${{ matrix.go-version }}
+      - name: Setup Go
         uses: actions/setup-go@v6
         with:
           go-version: 1.25
-      # You can test your matrix by printing the current Go version
       - name: Display Go version
         run: go version
-      - name: Test it!
+      - name: Test
         run: make V=1 test
+        working-directory: shared/valkey/operator
