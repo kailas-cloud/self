@@ -13,6 +13,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            monitoring:
+              - 'platform/monitoring/**'
+
       - name: Setup kustomize
         uses: imranismail/setup-kustomize@v2
         with:
@@ -55,6 +63,7 @@ jobs:
             --wait
 
       - name: Deploy kube-prometheus-stack
+        if: steps.changes.outputs.monitoring == 'true'
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
