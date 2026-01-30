@@ -1,5 +1,7 @@
 # kailas-cloud/self
 
+---
+
 Monorepo for **infra + platform + shared** resources of the Kailas Cloud cluster.
 Apps live in **separate repositories** (for example, the `llm` app repo).
 
