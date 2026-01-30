@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meeseeks-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meeseeks-ui
+  template:
+    metadata:
+      labels:
+        app: meeseeks-ui
+    spec:
+      containers:
+        - name: openhands
+          image: docker.openhands.dev/openhands/openhands:latest
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: LLM_MODEL
+              value: "openai/gpt-oss-120b"
+            - name: LLM_BASE_URL
+              value: "https://api.tokenfactory.nebius.com/v1/chat/completions"
+            - name: LLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: meeseeks-ui-secret
+                  key: NEBIUS_API_KEY
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: meeseeks-ui-secret
+                  key: GITHUB_TOKEN
+            - name: OH_PERSISTENCE_DIR
+              value: "/data/openhands"
+            - name: OH_WEB_URL
+              value: "https://meeseeks.kailas.cloud"
+            - name: RUNTIME
+              value: "docker"
+            - name: DOCKER_HOST
+              value: "unix:///var/run/docker.sock"
+            - name: AGENT_SERVER_IMAGE_REPOSITORY
+              value: "docker.openhands.dev/openhands/runtime"
+            - name: AGENT_SERVER_IMAGE_TAG
+              value: "latest"
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              memory: "4Gi"
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 6
+          volumeMounts:
+            - name: meeseeks-ui-data
+              mountPath: /data/openhands
+            - name: dind-socket
+              mountPath: /var/run
+        - name: docker
+          image: docker:24-dind
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              memory: "1Gi"
+          volumeMounts:
+            - name: dind-socket
+              mountPath: /var/run
+            - name: dind-storage
+              mountPath: /var/lib/docker
+      volumes:
+        - name: meeseeks-ui-data
+          persistentVolumeClaim:
+            claimName: meeseeks-ui-pvc
+        - name: dind-socket
+          emptyDir: {}
+        - name: dind-storage
+          emptyDir: {}
