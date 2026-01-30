@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: openhands
-          image: docker.openhands.dev/openhands/openhands:latest
+          image: ghcr.io/kailas-cloud/meeseeks-ui:1.2-tmux
           ports:
             - containerPort: 3000
               name: http
@@ -38,13 +38,9 @@ spec:
             - name: OH_WEB_URL
               value: "https://meeseeks.kailas.cloud"
             - name: RUNTIME
-              value: "docker"
-            - name: DOCKER_HOST
-              value: "unix:///var/run/docker.sock"
-            - name: AGENT_SERVER_IMAGE_REPOSITORY
-              value: "docker.openhands.dev/openhands/runtime"
-            - name: AGENT_SERVER_IMAGE_TAG
-              value: "latest"
+              value: "local"
+            - name: SANDBOX_VOLUMES
+              value: "/data/openhands/workspace:/workspace:rw"
           resources:
             requests:
               cpu: "500m"
@@ -66,31 +62,7 @@ spec:
           volumeMounts:
             - name: meeseeks-ui-data
               mountPath: /data/openhands
-            - name: dind-socket
-              mountPath: /var/run
-        - name: docker
-          image: docker:24-dind
-          env:
-            - name: DOCKER_TLS_CERTDIR
-              value: ""
-          securityContext:
-            privileged: true
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "256Mi"
-            limits:
-              memory: "1Gi"
-          volumeMounts:
-            - name: dind-socket
-              mountPath: /var/run
-            - name: dind-storage
-              mountPath: /var/lib/docker
       volumes:
         - name: meeseeks-ui-data
           persistentVolumeClaim:
             claimName: meeseeks-ui-pvc
-        - name: dind-socket
-          emptyDir: {}
-        - name: dind-storage
-          emptyDir: {}
