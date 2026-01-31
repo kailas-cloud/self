@@ -15,11 +15,10 @@ spec:
   # Resource requests/limits
   resources:
     limits:
-      cpu: 4000m
-      memory: 16Gi
+      memory: 8Gi
     requests:
-      cpu: 2000m
-      memory: 12Gi
+      cpu: 1000m
+      memory: 1Gi
 
   # Persistent storage using Hetzner Cloud Volumes
   storage:
