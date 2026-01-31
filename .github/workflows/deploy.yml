@@ -54,7 +54,7 @@ jobs:
           file: ./memory/valkey/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/valkey:latest
+          tags: ghcr.io/${{ github.repository_owner }}/valkey:0.0.1
 
       - name: Setup kustomize
         uses: imranismail/setup-kustomize@v2
