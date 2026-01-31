@@ -1,4 +1,4 @@
-FROM valkey/valkey-bundle:9.0
+FROM valkey/valkey-bundle:9.0.0-alpine
 
 RUN apk add --no-cache coreutils
 
