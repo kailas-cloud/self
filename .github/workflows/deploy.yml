@@ -30,8 +30,8 @@ jobs:
               - 'platform/cert-manager/**'
             k3s_addons:
               - 'infra/k3s/manifests/**'
-            valkey_operator:
-              - 'shared/valkey/operator/**'
+            memory_layer:
+              - 'memory/**'
 
       - name: Setup kustomize
         uses: imranismail/setup-kustomize@v2
@@ -88,10 +88,11 @@ jobs:
             --values platform/monitoring/values.yaml \
             --wait
 
-      - name: Deploy valkey-operator (CRDs + controller)
-        if: steps.changes.outputs.valkey_operator == 'true'
+      - name: Install/upgrade valkey-operator (official)
+        if: steps.changes.outputs.memory_layer == 'true'
         run: |
-          kubectl apply -k shared/valkey/operator/config/default
+          LATEST=$(curl -s https://api.github.com/repos/hyperspike/valkey-operator/releases/latest | python3 -c 'import sys, json; print(json.load(sys.stdin)[\"tag_name\"])')
+          curl -sL https://github.com/hyperspike/valkey-operator/releases/download/${LATEST}/install.yaml | kubectl apply -f -
           kubectl rollout status deployment/valkey-operator-controller-manager -n valkey-operator-system
 
       - name: Apply manifests to cluster

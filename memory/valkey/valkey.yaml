@@ -1,0 +1,43 @@
+apiVersion: hyperspike.io/v1
+kind: Valkey
+metadata:
+  name: valkey-cluster
+spec:
+  # 3 primary nodes (shards)
+  nodes: 3
+  # No replicas for now (production would use replicas: 1)
+  replicas: 0
+
+  # Memory layer image with custom valkey.conf + entrypoint
+  image: ghcr.io/kailas-cloud/valkey:9.0.0-alpine
+  # Module args are defined in the image's valkey.conf.
+
+  # Resource requests/limits
+  resources:
+    limits:
+      cpu: 4000m
+      memory: 16Gi
+    requests:
+      cpu: 2000m
+      memory: 12Gi
+
+  # Persistent storage using Hetzner Cloud Volumes
+  storage:
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: hcloud-volumes
+      resources:
+        requests:
+          storage: 100Gi
+
+  # Security settings
+  anonymousAuth: false
+  volumePermissions: true
+
+  # No TLS for internal cluster (add later if needed)
+  tls: false
+
+  # Monitoring
+  prometheus: true
+  serviceMonitor: true
