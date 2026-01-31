@@ -17,8 +17,8 @@ curl -sL https://github.com/hyperspike/valkey-operator/releases/download/${LATES
 ## Сборка образа (memory layer)
 
 ```bash
-docker build -t ghcr.io/kailas-cloud/valkey:9.0.0-alpine self/memory/valkey
-docker push ghcr.io/kailas-cloud/valkey:9.0.0-alpine
+docker build -t ghcr.io/kailas-cloud/valkey:latest self/memory/valkey
+docker push ghcr.io/kailas-cloud/valkey:latest
 ```
 
 ## Деплой кластера
@@ -46,7 +46,8 @@ Namespace для memory layer: `valkey`.
 |----------|----------|----------|
 | `nodes` | 3 | Количество primary нод (shards) |
 | `replicas` | 0 | Реплики на shard (0 = только primaries) |
-| `image` | `ghcr.io/kailas-cloud/valkey:9.0.0-alpine` | Memory-layer image (custom valkey.conf + entrypoint) |
+| `image` | `ghcr.io/kailas-cloud/valkey:latest` | Memory-layer image (custom valkey.conf + entrypoint) |
+| `imagePullPolicy` | `Always` | Всегда тянуть образ при запуске pod |
 | `storage` | 10Gi | Размер PVC на каждую ноду |
 
 ### Модули
@@ -106,7 +107,7 @@ Coordinator обеспечивает синхронизацию FT индекс�
 
 ```bash
 # Создать тестовый под в redcat namespace
-kubectl run valkey-shell -n redcat --image=ghcr.io/kailas-cloud/valkey:9.0.0-alpine \
+kubectl run valkey-shell -n redcat --image=ghcr.io/kailas-cloud/valkey:latest \
   --command -- sleep infinity
 
 # Получить пароль

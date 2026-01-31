@@ -9,7 +9,8 @@ spec:
   replicas: 0
 
   # Memory layer image with custom valkey.conf + entrypoint
-  image: ghcr.io/kailas-cloud/valkey:9.0.0-alpine
+  image: ghcr.io/kailas-cloud/valkey:latest
+  imagePullPolicy: Always
   # Module args are defined in the image's valkey.conf.
 
   # Resource requests/limits
