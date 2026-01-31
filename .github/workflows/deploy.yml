@@ -114,12 +114,13 @@ jobs:
             --values platform/monitoring/values.yaml \
             --wait
 
-      - name: Install/upgrade valkey-operator (official)
-        if: steps.changes.outputs.memory_layer == 'true'
+      - name: Ensure valkey-operator CRDs (official)
         run: |
-          LATEST=$(curl -s https://api.github.com/repos/hyperspike/valkey-operator/releases/latest | jq -r .tag_name)
-          curl -sL https://github.com/hyperspike/valkey-operator/releases/download/${LATEST}/install.yaml | kubectl apply -f -
-          kubectl rollout status deployment/valkey-operator-controller-manager -n valkey-operator-system
+          if ! kubectl get crd valkeys.hyperspike.io >/dev/null 2>&1; then
+            LATEST=$(curl -s https://api.github.com/repos/hyperspike/valkey-operator/releases/latest | jq -r .tag_name)
+            curl -sL https://github.com/hyperspike/valkey-operator/releases/download/${LATEST}/install.yaml | kubectl apply -f -
+            kubectl rollout status deployment/valkey-operator-controller-manager -n valkey-operator-system
+          fi
 
       - name: Apply manifests to cluster
         run: |
