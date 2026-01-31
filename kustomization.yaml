@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - infra/k3s/manifests
   - platform
-  - agentic
   - shared
