@@ -8,8 +8,8 @@ spec:
   # No replicas for now (production would use replicas: 1)
   replicas: 0
 
-  # Custom image with valkey-search module
-  image: ghcr.io/kailas-cloud/valkey-bundle:9.0-coordinator
+  # Official valkey-bundle image with modules
+  image: valkey/valkey-bundle:9.0.0-alpine
 
   # Load valkey-search module with coordinator enabled for cluster mode
   modules:

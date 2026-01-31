@@ -2,6 +2,8 @@
 
 Fork of [valkey-io/valkey-bundle](https://github.com/valkey-io/valkey-bundle) with configurable module arguments.
 
+Deprecated for self/shared/valkey: the operator now overrides entrypoint to `valkey-server` and consumes `valkey.conf` directly, so module args no longer require `*_MODULE_ARGS`. Kept for legacy builds only.
+
 ## Key Feature: Coordinator Support
 
 This build enables `use-coordinator yes` for valkey-search module by default, which is required for cluster mode with cross-shard search.

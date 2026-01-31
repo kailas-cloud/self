@@ -4,6 +4,8 @@
 
 The Docker entrypoint has been rewritten in Python for better testability and maintainability.
 
+Deprecated for self/shared/valkey: the operator now overrides entrypoint to `valkey-server` and consumes `valkey.conf` directly, so module args no longer require `*_MODULE_ARGS`. Kept for legacy builds only.
+
 ### Features
 
 - **Module Auto-Discovery**: Automatically loads all `.so` modules from `/usr/lib/valkey/`

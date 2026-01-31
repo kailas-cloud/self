@@ -38,7 +38,7 @@ Namespace для shared-инстанса: `valkey`.
 |----------|----------|----------|
 | `nodes` | 3 | Количество primary нод (shards) |
 | `replicas` | 0 | Реплики на shard (0 = только primaries) |
-| `image` | `ghcr.io/kailas-cloud/valkey-bundle:9.0-coordinator` | Docker образ с модулями |
+| `image` | `valkey/valkey-bundle:9.0.0-alpine` | Docker образ с модулями |
 | `storage` | 10Gi | Размер PVC на каждую ноду |
 
 ### Модули
@@ -48,6 +48,8 @@ Namespace для shared-инстанса: `valkey`.
 - `--reader-threads 8` - потоки для чтения
 - `--writer-threads 4` - потоки для записи
 - `--hnsw-block-size 10000` - размер блока HNSW индекса
+
+Оператор запускает `valkey-server /valkey/etc/valkey.conf` как entrypoint, поэтому модульные аргументы берутся из конфига и `*_MODULE_ARGS` больше не нужны.
 
 ## Проверка
 
@@ -96,7 +98,7 @@ Coordinator обеспечивает синхронизацию FT индекс�
 
 ```bash
 # Создать тестовый под в redcat namespace
-kubectl run valkey-shell -n redcat --image=ghcr.io/kailas-cloud/valkey-bundle:9.0-coordinator \
+kubectl run valkey-shell -n redcat --image=valkey/valkey-bundle:9.0.0-alpine \
   --command -- sleep infinity
 
 # Получить пароль
