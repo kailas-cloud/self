@@ -47,7 +47,6 @@ Namespace для memory layer: `valkey`.
 | `nodes` | 3 | Количество primary нод (shards) |
 | `replicas` | 0 | Реплики на shard (0 = только primaries) |
 | `image` | `ghcr.io/kailas-cloud/valkey:latest` | Memory-layer image (custom valkey.conf + entrypoint) |
-| `imagePullPolicy` | `Always` | Всегда тянуть образ при запуске pod |
 | `storage` | 10Gi | Размер PVC на каждую ноду |
 
 ### Модули

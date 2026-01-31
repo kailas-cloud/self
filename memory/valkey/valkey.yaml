@@ -10,7 +10,6 @@ spec:
 
   # Memory layer image with custom valkey.conf + entrypoint
   image: ghcr.io/kailas-cloud/valkey:latest
-  imagePullPolicy: Always
   # Module args are defined in the image's valkey.conf.
 
   # Resource requests/limits
