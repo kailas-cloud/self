@@ -34,3 +34,6 @@ go.work.sum
 .kubeconfig
 .kubeconfig64
 .idea
+
+.DS_Store
+
