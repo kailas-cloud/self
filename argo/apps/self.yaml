@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: self
+  namespace: argocd
+spec:
+  project: kailas
+  source:
+    repoURL: https://github.com/kailas-cloud/self
+    targetRevision: main
+    path: argo/self
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
