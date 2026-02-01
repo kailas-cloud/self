@@ -5,3 +5,15 @@ metadata:
   namespace: argocd
 data:
   url: https://argo.kailas.cloud
+  admin.enabled: "false"
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: $dex.github.clientID
+          clientSecret: $dex.github.clientSecret
+          orgs:
+            - name: kailas-cloud
+          teamNameField: slug
